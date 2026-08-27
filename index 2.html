@@ -49,7 +49,7 @@ textarea{min-height:70px;resize:vertical}
 .price-row input{padding:6px 5px;font-size:10px}
 .price-row .p-label{font-size:9px;color:#aaa;align-self:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .product-row{
-  display:grid;grid-template-columns:1.4fr .55fr .75fr 34px;gap:7px;margin-bottom:8px
+  display:grid;grid-template-columns:1.3fr .6fr .5fr .7fr 34px;gap:7px;margin-bottom:8px
 }
 .product-row input{min-width:0}
 .icon-btn{
@@ -141,7 +141,15 @@ td{padding:14px 0;border-bottom:1px solid #eee;font-size:13px}
     <label>Phone</label><input id="phone" placeholder="01XXXXXXXXX">
     <label>Address</label><textarea id="address" placeholder="Delivery address"></textarea>
     <div class="section-title">Order</div>
-    <div style="display:grid;grid-template-columns:1.25fr .52fr .52fr .72fr 34px;gap:7px;margin-bottom:7px;color:#777;font-size:9px;text-transform:uppercase;letter-spacing:1px"><span>Fragrance</span><span>ML</span><span>Qty</span><span>Price</span><span></span></div><div id="products"></div>
+    <div style="display:grid;grid-template-columns:1.3fr .6fr .5fr .7fr 34px;gap:7px;margin-bottom:7px;color:#777;font-size:9px;text-transform:uppercase;letter-spacing:1px"><span>Fragrance</span><span>ML</span><span>Qty</span><span>Price</span><span></span></div><datalist id="catalog-names"></datalist>
+    <datalist id="ml-options">
+      <option value="5">
+      <option value="6">
+      <option value="10">
+      <option value="15">
+      <option value="full">
+    </datalist>
+    <div id="products"></div>
     <button class="add" onclick="addProduct()">+ Add fragrance decant</button><div class="hint">Each line is a decant size. Select 3 / 5 / 6 / 10 / 15 / 20 / 30 ml, then enter quantity and selling price.</div>
     <div class="grid2">
       <div><label>Discount (৳)</label><input id="discount" type="number" min="0" value="0"></div>
@@ -213,14 +221,8 @@ function addProduct(name="",ml=5,qty=1,price=""){
   const row=document.createElement("div");
   row.className="product-row";
   row.innerHTML=`
-    <select class="p-name" aria-label="Fragrance"></select>
-    <select class="p-ml" aria-label="Size">
-      <option value="5" ${String(ml)==="5"?"selected":""}>5 ml</option>
-      <option value="6" ${String(ml)==="6"?"selected":""}>6 ml</option>
-      <option value="10" ${String(ml)==="10"?"selected":""}>10 ml</option>
-      <option value="15" ${String(ml)==="15"?"selected":""}>15 ml</option>
-      <option value="full" ${String(ml)==="full"?"selected":""}>Full Bottle</option>
-    </select>
+    <input class="p-name" list="catalog-names" placeholder="Fragrance" aria-label="Fragrance" value="${escapeAttr(name)}">
+    <input class="p-ml" list="ml-options" placeholder="ML" aria-label="Size" value="${escapeAttr(ml)}">
     <input class="p-qty" type="number" min="1" value="${qty}">
     <input class="p-price" type="text" inputmode="decimal" placeholder="Price" value="${price}" aria-label="Editable selling price">
     <button class="icon-btn" title="Remove" onclick="this.parentElement.remove(); update()">×</button>`;
@@ -233,10 +235,10 @@ function addProduct(name="",ml=5,qty=1,price=""){
   row.querySelectorAll("input").forEach(x=>x.addEventListener("input",update));
   update();
 }
-const DEFAULT_CATALOG = {"Ultra Male": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 4100}, "Le Male Elixir": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Allure Homme Sport": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "Eros Versace Men": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Layton": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "One Million": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Aqua Di Gio Profumo": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "Aqua Di Gio": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "Ombre Leather": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "Tobacco Vanille": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "Oud Wood": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 3250}, "Sauvage Elixir": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "Aventus Absolut": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "Bleu De": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "Sauvage": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "Pour Homme": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "Flora": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Good Girl": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Libre": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Black Opium": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Coco Mademoiselle": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "Pour Femme": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "French Oud (50ml)": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 2500}, "Baccarat Rouge 540": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "Pacific Chill": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "Imagination": {"5": 449, "6": 499, "10": 859, "15": 1199, "full": 5400}, "Wulong Cha": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "The One Man": {"5": null, "6": null, "10": 569, "15": 849, "full": 3250}, "Noir Extreme": {"5": 399, "6": 449, "10": 749, "15": 1049, "full": 4600}, "Afternoon Swim": {"5": 449, "6": 529, "10": 849, "15": 1199, "full": 5400}, "Goddess": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "Imperial Valley": {"5": 349, "6": 399, "10": 649, "15": 899, "full": 4100}, "Instant Crush": {"5": 399, "6": 449, "10": 749, "15": 1049, "full": 4600}, "Beach Hut": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "Men 212": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "Baccarat Rouge Extrait": {"5": 459, "6": 529, "10": 849, "15": 1199, "full": 5400}, "Blue Talisman": {"5": 449, "6": 529, "10": 849, "15": 1199, "full": 5400}, "Silver Mountain Water": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "Tuxedo": {"5": 349, "6": 399, "10": 649, "15": 899, "full": 4100}, "Terre de Hermes": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "Aventus": {"5": 349, "6": 399, "10": 649, "15": 899, "full": 4100}, "Most Wanted": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "XJ 1861 Naxos": {"5": 399, "6": 449, "10": 749, "15": 1049, "full": 4600}, "Le Beau": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "Stronger With You Intensely": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "Y For Men": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}};
+const DEFAULT_CATALOG = {"YB Ultra Male": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 4100}, "YB Le Male Elixir": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Allure Homme Sport": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "YB Eros Versace Men": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Layton": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "YB One Million": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Aqua Di Gio Profumo": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "YB Aqua Di Gio": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "YB Ombre Leather": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "YB Tobacco Vanille": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "YB Oud Wood": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 3250}, "YB Sauvage Elixir": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "YB Aventus Absolut": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "YB Bleu De": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "YB Sauvage": {"5": 299, "6": 329, "10": 549, "15": 799, "full": 3250}, "YB Pour Homme": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "YB Flora": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Good Girl": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Libre": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Black Opium": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Coco Mademoiselle": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 3250}, "YB Pour Femme": {"5": 349, "6": 399, "10": 669, "15": 899, "full": 4100}, "YB French Oud (50ml)": {"5": 309, "6": 349, "10": 569, "15": 849, "full": 2500}, "YB Baccarat Rouge 540": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "YB Pacific Chill": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "YB Imagination": {"5": 449, "6": 499, "10": 859, "15": 1199, "full": 5400}, "YB Wulong Cha": {"5": 419, "6": 469, "10": 789, "15": 1099, "full": 5100}, "YB The One Man": {"5": null, "6": null, "10": 569, "15": 849, "full": 3250}, "YB Noir Extreme": {"5": 399, "6": 449, "10": 749, "15": 1049, "full": 4600}, "YB Afternoon Swim": {"5": 449, "6": 529, "10": 849, "15": 1199, "full": 5400}, "YB Goddess": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB Imperial Valley": {"5": 349, "6": 399, "10": 649, "15": 899, "full": 4100}, "YB Instant Crush": {"5": 399, "6": 449, "10": 749, "15": 1049, "full": 4600}, "YB Beach Hut": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB Men 212": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB Baccarat Rouge Extrait": {"5": 459, "6": 529, "10": 849, "15": 1199, "full": 5400}, "YB Blue Talisman": {"5": 449, "6": 529, "10": 849, "15": 1199, "full": 5400}, "YB Silver Mountain Water": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB Tuxedo": {"5": 349, "6": 399, "10": 649, "15": 899, "full": 4100}, "YB Terre de Hermes": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB Aventus": {"5": 349, "6": 399, "10": 649, "15": 899, "full": 4100}, "YB Most Wanted": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB XJ 1861 Naxos": {"5": 399, "6": 449, "10": 749, "15": 1049, "full": 4600}, "YB Le Beau": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB Stronger With You Intensely": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}, "YB Y For Men": {"5": 299, "6": 349, "10": 549, "15": 799, "full": 3250}};
 const ADDITIONAL_CATALOG = {"Liquid Brun": {"5": 299, "6": 349, "10": 539, "15": 769}, "Liquid Brun LE": {"5": 329, "6": 379, "10": 579, "15": 829}, "Asad Bourbon": {"5": 249, "6": 289, "10": 449, "15": 639}, "Asad Zanzibar": {"5": 229, "6": 259, "10": 399, "15": 579}, "Modest Une": {"5": 289, "6": 329, "10": 509, "15": 729}, "Vulcan Feu": {"5": 349, "6": 399, "10": 629, "15": 899}, "9PM Elixir": {"5": 429, "6": 489, "10": 759, "15": 1089}, "MA Dark Door Intense": {"5": 149, "6": 169, "10": 269, "15": 379}, "MA Alpine Homme Sport": {"5": 229, "6": 259, "10": 399, "15": 579}, "MA Jean Lowe Vibe": {"5": 249, "6": 289, "10": 449, "15": 639}, "Khadlaj Island": {"5": 249, "6": 289, "10": 449, "15": 639}, "Rayhaan Elixir": {"5": 249, "6": 289, "10": 449, "15": 639}, "Rasasi Daarej Extrait": {"5": 229, "6": 259, "10": 399, "15": 579}, "Rayhaan Corium": {"5": 229, "6": 259, "10": 399, "15": 579}, "Rayhaan Nocturno Elixir": {"5": 229, "6": 259, "10": 399, "15": 579}, "Rayhaan Azul": {"5": 229, "6": 259, "10": 399, "15": 579}, "Afnan Turathi Electric": {"5": 429, "6": 489, "10": 759, "15": 1089}, "Maison Asrar DXB": {"5": 379, "6": 439, "10": 679, "15": 979}, "Arabiyat Prestige Bois Blanc": {"5": 309, "6": 359, "10": 559, "15": 799}, "Bade'e Al Oud Honor & Glory": {"5": 259, "6": 299, "10": 469, "15": 669}, "Rayhaan Ocean Rush": {"5": 229, "6": 259, "10": 399, "15": 579}, "Al Haramain Détour Noir": {"5": 279, "6": 319, "10": 499, "15": 709}, "Armaf CDN Urban Elixir": {"5": 299, "6": 349, "10": 539, "15": 769}, "Rasasi Hawas Fire": {"5": 349, "6": 399, "10": 629, "15": 899}, "Armaf CDNIM Parfum": {"5": 329, "6": 379, "10": 579, "15": 829}, "Versace Eros EDT": {"5": 459, "6": 529, "10": 829, "15": 1209}, "Armaf Tag-Him Uomo Rosso": {"5": 279, "6": 319, "10": 499, "15": 709}, "MA Exquisite Prive": {"5": 219, "6": 249, "10": 389, "15": 549}, "David Beckham Classic Black": {"5": 199, "6": 229, "10": 349, "15": 499}, "Al Haramain Rouge French Collection": {"5": 699, "6": 749, "10": 1299, "15": 1799}, "Al Haramain Sheikh": {"5": 449, "6": 499, "10": 699, "15": 999}};
 Object.assign(DEFAULT_CATALOG, ADDITIONAL_CATALOG);
-const STORAGE_KEY = "zuhaib-fragrance-prices-v1";
+const STORAGE_KEY = "zuhaib-fragrance-prices-v2";
 let catalog = loadCatalog();
 function loadCatalog(){
   try{
@@ -246,8 +248,11 @@ function loadCatalog(){
 }
 function perfumeNames(){return Object.keys(catalog);}
 function populatePerfumeSelect(select,selected=""){
-  select.innerHTML=perfumeNames().map(n=>'<option value="'+escapeAttr(n)+'">'+escapeHTML(n)+'</option>').join("");
-  if(selected && catalog[selected]) select.value=selected;
+  // Legacy support for select elements if any
+  if(select.tagName === 'SELECT') {
+    select.innerHTML=perfumeNames().map(n=>'<option value="'+escapeAttr(n)+'">'+escapeHTML(n)+'</option>').join("");
+    if(selected && catalog[selected]) select.value=selected;
+  }
 }
 function setCatalogPrice(row){
   const name=row.querySelector(".p-name").value;
@@ -291,6 +296,8 @@ function renderPriceEditor(){
 function refreshCatalogUI(){
   const sel=document.getElementById("catalogSelect");
   if(sel)sel.innerHTML=perfumeNames().map(n=>'<option value="'+escapeAttr(n)+'">'+escapeHTML(n)+'</option>').join("");
+  const datalist=document.getElementById("catalog-names");
+  if(datalist)datalist.innerHTML=perfumeNames().map(n=>'<option value="'+escapeAttr(n)+'">').join("");
   renderPriceEditor();
 }
 function escapeAttr(s){return String(s).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
@@ -312,12 +319,13 @@ function update(){
   let subtotal=0;
   document.querySelectorAll(".product-row").forEach(row=>{
     const name=row.querySelector(".p-name").value.trim()||"Fragrance";
-    const ml=Number(row.querySelector(".p-ml").value)||5;
+    const mlValue=row.querySelector(".p-ml").value.trim()||"5";
+    let mlDisplay = mlValue.toLowerCase() === "full" ? "Full Bottle" : (mlValue.match(/ml/i) ? mlValue : mlValue + " ml");
     const qty=Number(row.querySelector(".p-qty").value)||0;
     const price=parsePrice(row.querySelector(".p-price").value);
     subtotal += qty*price;
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${escapeHTML(name)}</td><td>${ml} ml</td><td>${qty}</td><td>${money(qty*price)}</td>`;
+    tr.innerHTML=`<td>${escapeHTML(name)}</td><td>${escapeHTML(mlDisplay)}</td><td>${qty}</td><td>${money(qty*price)}</td>`;
     tbody.appendChild(tr);
   });
   if(!tbody.children.length) tbody.innerHTML='<tr><td colspan="4" class="empty">Add fragrance decants from the order panel</td></tr>';
