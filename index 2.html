@@ -142,13 +142,7 @@ td{padding:16px 0;border-bottom:1px solid #eee;font-size:13px}
     <label>Address</label><textarea id="address" placeholder="Delivery address"></textarea>
     <div class="section-title">Order</div>
     <div style="display:grid;grid-template-columns:1.3fr .6fr .5fr .7fr 34px;gap:7px;margin-bottom:7px;color:#777;font-size:9px;text-transform:uppercase;letter-spacing:1px"><span>Fragrance</span><span>ML</span><span>Qty</span><span>Price</span><span></span></div><datalist id="catalog-names"></datalist>
-    <datalist id="ml-options">
-      <option value="5">
-      <option value="6">
-      <option value="10">
-      <option value="15">
-      <option value="full">
-    </datalist>
+    
     <div id="products"></div>
     <button class="add" onclick="addProduct()">+ Add fragrance decant</button><div class="hint">Each line is a decant size. Select 3 / 5 / 6 / 10 / 15 / 20 / 30 ml, then enter quantity and selling price.</div>
     <div class="grid2">
@@ -222,7 +216,12 @@ function addProduct(name="",ml=5,qty=1,price=""){
   row.className="product-row";
   row.innerHTML=`
     <input class="p-name" list="catalog-names" placeholder="Fragrance" aria-label="Fragrance" value="${escapeAttr(name)}">
-    <input class="p-ml" list="ml-options" placeholder="ML" aria-label="Size" value="${escapeAttr(ml)}">
+    <select class="p-ml" aria-label="Size">
+      <option value="5" ${String(ml)==="5"?"selected":""}>5 ml</option>
+      <option value="6" ${String(ml)==="6"?"selected":""}>6 ml</option>
+      <option value="10" ${String(ml)==="10"?"selected":""}>10 ml</option>
+      <option value="15" ${String(ml)==="15"?"selected":""}>15 ml</option>
+    </select>
     <input class="p-qty" type="number" min="1" value="${qty}">
     <input class="p-price" type="text" inputmode="decimal" placeholder="Price" value="${price}" aria-label="Editable selling price">
     <button class="icon-btn" title="Remove" onclick="this.parentElement.remove(); update()">×</button>`;
@@ -319,13 +318,12 @@ function update(){
   let subtotal=0;
   document.querySelectorAll(".product-row").forEach(row=>{
     const name=row.querySelector(".p-name").value.trim()||"Fragrance";
-    const mlValue=row.querySelector(".p-ml").value.trim()||"5";
-    let mlDisplay = mlValue.toLowerCase() === "full" ? "Full Bottle" : (mlValue.match(/ml/i) ? mlValue : mlValue + " ml");
+    const ml=Number(row.querySelector(".p-ml").value)||5;
     const qty=Number(row.querySelector(".p-qty").value)||0;
     const price=parsePrice(row.querySelector(".p-price").value);
     subtotal += qty*price;
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${escapeHTML(name)}</td><td>${escapeHTML(mlDisplay)}</td><td>${qty}</td><td>${money(qty*price)}</td>`;
+    tr.innerHTML=`<td>${escapeHTML(name)}</td><td>${ml} ml</td><td>${qty}</td><td>${money(qty*price)}</td>`;
     tbody.appendChild(tr);
   });
   if(!tbody.children.length) tbody.innerHTML='<tr><td colspan="4" class="empty">Add fragrance decants from the order panel</td></tr>';
